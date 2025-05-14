@@ -1,22 +1,22 @@
-import mysql, { Connection, ConnectionOptions } from 'mysql2/promise';
-import fastify, { FastifyRequest, FastifyReply } from 'fastify'
-import cors from '@fastify/cors'
+import mysql, { Connection, Pool, PoolOptions } from 'mysql2/promise';
+import fastify, { FastifyRequest, FastifyReply } from 'fastify';
+import cors from '@fastify/cors';
 const app = fastify()
 app.register(cors)
 
 app.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
     reply.send("Fastify Funcionando")
 })
-app.get('/estudantes', async (request: FastifyRequest, reply: FastifyReply) => {
+app.get('/lista', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
         const conn =  await mysql.createConnection({
             host: "localhost",
             user: 'root',
             password: "",
-            database: 'banco1023a',
+            database: 'listagem_produtos',
             port: 3306
         })
-        const resultado =  await conn.query("SELECT * FROM estudantes")
+        const resultado = await conn.query("SELECT * FROM lista")
         const [dados, camposTabela] = resultado
         reply.status(200).send(dados)
     }
@@ -82,7 +82,6 @@ app.post('/estudantes', async (request: FastifyRequest, reply: FastifyReply) => 
     
     }
 })
-
 app.listen({ port: 8000 }, (err, address) => {
     if (err) {
         console.error(err)

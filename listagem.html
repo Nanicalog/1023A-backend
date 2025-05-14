@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #fff0f5;
+    color: #800040;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  header {
+    background-color: #ff66b2;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+
+  main {
+    padding: 30px;
+    text-align: center;
+    flex-grow: 1;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffe6f0;
+    box-shadow: 0 0 10px rgba(204, 0, 102, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ffb6c1;
+  }
+
+  th {
+    background-color: #ffb6c1;
+    color: #4b004b;
+  }
+
+  tr:hover {
+    background-color: #ffd6e8;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  footer {
+    background-color: #ff66b2;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+  }
+
+  
+  /*estiço de botões*/
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px; /* Espaço entre os botões */
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #ff66b2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  button:hover {
+    background-color: #ff3385;
+  }
+  .adiciona button {
+    padding: 10px 20px;
+    background-color: #ff66b2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+</style>
+<body>
+
+    <header>
+        <h2>Listagem de Sapatos</h2>
+      </header>
+     <img rsc
+      <main>
+                <!-- Lista de sapatos -->
+        <div class="lista">
+            <ul id="id-lista">Escolher Produto</ul>
+
+        <!-- Formulário para adicionar sapato -->
+        <div class="adiciona">
+          <input type="text" name="texto" id="id-input" placeholder="Escolha o sapato de sua preferência">
+          <button id="id-button">Adicionar na lista</button>
+        </div>
+
+          <!-- Botão para limpar a lista -->
+          <button id="clear-button">Limpar Lista </button>
+        </div>
+      </main>
+    
+      <script>
+        let input = document.getElementById('id-input');
+        let button = document.getElementById('id-button');
+        let clearButton = document.getElementById('clear-button');
+    
+        // Adicionar item à lista
+        button.addEventListener('click', function () { /*quando clicar no botão adiciona itens em formato de lista*/
+          if (input.value != "") {
+            let lista = document.getElementById('id-lista');
+            let item = document.createElement('li');
+            item.innerText = input.value;
+            lista.appendChild(item);
+            input.value = "";
+          }
+        });
+    
+        // Limpar lista
+        clearButton.addEventListener('click', function () {
+          let lista = document.getElementById('id-lista');
+          lista.innerHTML = ""; // Remove todos os itens da lista
+        });
+      </script>
+<footer>
+    <p>&copy; 2025 Lista de Sapatos. Todos os direitos reservados.</p>
+  </footer>
+
+    
+    </body>
+    
+    </html>

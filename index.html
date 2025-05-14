@@ -1,46 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Título Modificado</title>
+    <title>Lista de produtos</title>
 </head>
+
 <body>
-    <a href="./cadastro.html">Link Cadastro Estudante</a>
-    <h1>Lista de estudantes!</h1>
-    <ul id="minhalista">
-
-    </ul>
+    <form onsubmit="event.preventDefault();trataform()">
+        <label for="id">id</label>
+        <input type="text" id="id" name="id">
+        <label for="nome">Nome Produto</label>
+        <input type="text" id="nome" name="nome">
+        <input type="submit" value="Listar">
+    </form>
     <script>
-        async function buscaDados(){
-            const resposta = await fetch("http://localhost:8000/estudantes")
-            console.log(resposta)
-            if(resposta.status ===200){
-                const dados = await resposta.json()
-                console.log(dados)
-                console.log(dados[0].nome)
-                const ul = document.getElementById("minhalista")
-                for (let i = 0; i < dados.length; i++) {
-                    const element = dados[i];
-                    const novoli = document.createElement("li")
-                    novoli.innerText = element.nome
-                    ul.appendChild(novoli)
+        async function trataform() {
+            const inputId = document.getElementById("id")
+            const inputNome = document.getElementById("nome produto")
+            const id = inputId.value
+            const nome = inputNome.value
+
+            const objLista = {
+                id,
+                nome,
+                preco,
+                tamanho
+            }
+            try{
+                const resposta = await fetch("http://localhost:8000/lista",{
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    method:"POST",
+                    body: JSON.stringify(objLista)
+                })
+
+                if(resposta.status===200){
+                    alert("Produto listado com sucesso!")
+                }
+                if(resposta.status===400){
+                    const dados = await resposta.json()
+                    alert(`Erro do lado do backend:"\n${dados.mensagem}`)
+                }
+                if(resposta.status===404){
+                    alert("Erro não identificado. :(")
                 }
 
-                //Criem li a partir do vetor dados
-                //Coloque o texto que vem do banco no li
-                //Adicione o li na ul com id "minhalista" 
-            }else{
-                if(resposta.status ===400){
-                    const dados = await resposta.json()
-                    alert(dados.mensagem)
-                }
-                else{
-                    alert("ERRO NÃO IDENTIFICADO");
-                }
+            }catch(erro){
+                alert("Erro: Erro na requisição do FETCH\n"+
+                 "Você ligou o BACKEND com npm run dev?")
             }
         }
-        buscaDados()
     </script>
 </body>
+
 </html>
