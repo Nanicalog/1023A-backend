@@ -1,91 +1,77 @@
-import mysql, { Connection, Pool, PoolOptions } from 'mysql2/promise';
 import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
-const app = fastify()
-app.register(cors)
+import mysql from 'mysql2/promise';
 
+// Criação da aplicação
+const app = fastify();
+
+// Registro do CORS
+await app.register(cors);
+
+// Criação do pool de conexões (reutilizável)
+const pool = mysql.createPool({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "listagem_produtos",
+    port: 3306
+});
+
+// Rota de teste
 app.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
-    reply.send("Fastify Funcionando")
-})
+    reply.send("Fastify funcionando");
+});
+
+// Rota para listar todos os produtos
 app.get('/lista', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-        const conn =  await mysql.createConnection({
-            host: "localhost",
-            user: 'root',
-            password: "",
-            database: 'listagem_produtos',
-            port: 3306
-        })
-        const resultado = await conn.query("SELECT * FROM lista")
-        const [dados, camposTabela] = resultado
-        reply.status(200).send(dados)
+        const [produtos] = await pool.query("SELECT * FROM lista");
+        reply.status(200).send(produtos);
+    } catch (erro: any) {
+        console.error(erro);
+        reply.status(500).send({ mensagem: "Erro ao buscar produtos" });
     }
-    catch (erro: any) {
-        if (erro.code === 'ECONNREFUSED') {
-            console.log("ERRO: LIGUE O LARAGAO => Conexão Recusada")
-            reply.status(400).send({mensagem:"ERRO: LIGUE O LARAGAO => Conexão Recusada"})
-        } else if (erro.code === 'ER_BAD_DB_ERROR') {
-            console.log("ERRO: CRIE UM BANCO DE DADOS COM O NOME DEFINIDO NA CONEXÃO")
-            reply.status(400).send({mensagem:"ERRO: CRIE UM BANCO DE DADOS COM O NOME DEFINIDO NA CONEXÃO"})
-        } else if (erro.code === 'ER_ACCESS_DENIED_ERROR') {
-            console.log("ERRO: CONFERIR O USUÁRIO E SENHA DEFINIDOS NA CONEXÃO")
-            reply.status(400).send({mensagem:"ERRO: CONFERIR O USUÁRIO E SENHA DEFINIDOS NA CONEXÃO"})
-        } else if (erro.code === 'ER_NO_SUCH_TABLE') {
-            console.log("ERRO: Você deve criar a tabela com o mesmo nome da sua QUERY")
-            reply.status(400).send({mensagem:"ERRO: Você deve criar a tabela com o mesmo nome da sua QUERY"})
-        } else if (erro.code === 'ER_PARSE_ERROR') {
-            console.log("ERRO: Você tem um erro de escrita em sua QUERY confira: VÍRGULAS, PARENTESES E NOME DE COLUNAS")
-            reply.status(400).send({mensagem:"ERRO: Você tem um erro de escrita em sua QUERY confira: VÍRGULAS, PARENTESES E NOME DE COLUNAS"})
-        } else {
-            console.log(erro)
-            reply.status(400).send({mensagem:"ERRO: NÃO IDENTIFICADO"})
-        }
-    }
-})
-app.post('/estudantes', async (request: FastifyRequest, reply: FastifyReply) => {
-    const {id,nome} = request.body as any
+});
+
+// Rota para adicionar um produto
+interface Produto {
+    id: number;
+    nome: string;
+}
+
+app.post('/produtos', async (request: FastifyRequest<{ Body: Produto }>, reply: FastifyReply) => {
+    const { id, nome } = request.body;
+
     try {
-        const conn =  await mysql.createConnection({
-            host: "localhost",
-            user: 'root',
-            password: "",
-            database: 'banco1023a',
-            port: 3306
-        })
-        const resultado =  await conn.query("INSERT INTO estudantes (id,nome) VALUES (?,?)",[id,nome])
-        const [dados, camposTabela] = resultado
-        reply.status(200).send(dados)
-    }
-    catch (erro: any) {
-        switch (erro.code) {
-            case "ECONNREFUSED":
-                console.log("ERRO: LIGUE O LARAGÃO!!! CABEÇA!");
-                reply.status(400).send({ mensagem: "ERRO: LIGUE O LARAGÃO!!! CABEÇA!" });
-                break;
-            case "ER_BAD_DB_ERROR":
-                console.log("ERRO: CONFIRA O NOME DO BANCO DE DADOS OU CRIE UM NOVO BANCO COM O NOME QUE VOCÊ COLOCOU LÁ NA CONEXÃO");
-                reply.status(400).send({ mensagem: "ERRO: CONFIRA O NOME DO BANCO DE DADOS OU CRIE UM NOVO BANCO COM O NOME QUE VOCÊ COLOCOU LÁ NA CONEXÃO" });
-                break;
-            case "ER_ACCESS_DENIED_ERROR":
-                console.log("ERRO: CONFIRA O USUÁRIO E SENHA NA CONEXÃO");
-                reply.status(400).send({ mensagem: "ERRO: CONFIRA O USUÁRIO E SENHA NA CONEXÃO" });
-                break;
-            case "ER_DUP_ENTRY":
-                console.log("ERRO: VOCÊ DUPLICOU A CHAVE PRIMÁRIA");
-                reply.status(400).send({ mensagem: "ERRO: VOCÊ DUPLICOU A CHAVE PRIMÁRIA" });
-                break;
-            default:
-                console.log(erro);
-                reply.status(400).send({ mensagem: "ERRO DESCONHECIDO OLHE O TERMINAL DO BACKEND" });
-                break;
+        const [resultado] = await pool.query(
+            "INSERT INTO lista (id, nome) VALUES (?, ?)",
+            [id, nome]
+        );
+        reply.status(201).send({ mensagem: "Produto adicionado com sucesso", resultado });
+    } catch (erro: any) {
+        console.error(erro);
+
+        let mensagem = "Erro ao inserir produto";
+
+        if (erro.code === "ER_DUP_ENTRY") {
+            mensagem = "ID duplicado: já existe um produto com esse ID";
+        } else if (erro.code === "ER_NO_SUCH_TABLE") {
+            mensagem = "A tabela 'lista' não existe no banco";
         }
-    
+
+        reply.status(400).send({ mensagem });
     }
-})
-app.listen({ port: 8000 }, (err, address) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
+});
+
+// Inicialização do servidor
+const start = async () => {
+    try {
+        await app.listen({ port: 8000 });
+        console.log("Servidor rodando em http://localhost:8000");
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
     }
-    console.log(`Server listening at ${address}`)
-})
+};
+
+start();

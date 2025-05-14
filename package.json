@@ -1,7 +1,7 @@
 {
-  "name": "1023a-backend",
+  "name": "listagem_produtos",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "tsx watch index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
