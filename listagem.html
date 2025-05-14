@@ -1,154 +1,109 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <title>Lista de Produtos</title>
+    <style>
+        /* Estilo base para o corpo da página */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #ffffff; /* Fundo branco */
+            color: #590202; /* Cor do texto */
+            display: flex;
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            height: 100vh; /* Altura total da janela */
+            margin: 0;
+        }
+
+        /* Container principal */
+        .container {
+            text-align: center;
+            border: 2px solid #590202;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        /* Estilo para os botões */
+        button {
+            background-color: #590202;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #7a0404;
+        }
+
+        /* Campo de entrada de texto */
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Lista de produtos */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+    </style>
 </head>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Times New Roman', Times, serif;
-    background-color: #fff0f5;
-    color: #800040;
-    min-height: 50vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  header {
-    background-color: #ff66b2;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-
-  main {
-    padding: 30px;
-    text-align: center;
-    flex-grow: 1;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffe6f0;
-    box-shadow: 0 0 10px rgba(204, 0, 102, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  th, td {
-    padding: 15px;
-    text-align: center;
-    border-bottom: 1px solid #ffb6c1;
-  }
-
-  th {
-    background-color: #ffb6c1;
-    color: #4b004b;
-  }
-
-  tr:hover {
-    background-color: #ffd6e8;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  footer {
-    background-color: #ff66b2;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: 40px;
-  }
-
-  
-  /*estiço de botões*/
-  .button-container {
-    display: flex;
-    justify-content: center;
-    gap: 5px; /* Espaço entre os botões */
-    margin-top: 20px;
-  }
-
-  button {
-    padding: 10px 20px;
-    background-color: #ff66b2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-
-  button:hover {
-    background-color: #ff3385;
-  }
-  .adiciona button {
-    padding: 10px 20px;
-    background-color: #ff66b2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-</style>
 <body>
 
-    <header>
-        <h2>Listagem de Sapatos</h2>
-      </header>
-     <img rsc
-      <main>
-                <!-- Lista de sapatos -->
-        <div class="lista">
-            <ul id="id-lista">Escolher Produto</ul>
+    <!-- Container principal da aplicação -->
+    <div class="container">
+        <h1>Lista de Produtos</h1>
 
-        <!-- Formulário para adicionar sapato -->
-        <div class="adiciona">
-          <input type="text" name="texto" id="id-input" placeholder="Escolha o sapato de sua preferência">
-          <button id="id-button">Adicionar na lista</button>
+        <!-- Campo para digitar o nome do produto -->
+        <input type="text" id="produtoInput" placeholder="Digite o nome do produto">
+
+        <!-- Botões de ação -->
+        <div>
+            <button onclick="adicionarProduto()">Adicionar</button>
+            <button onclick="limparLista()">Limpar Lista</button>
         </div>
 
-          <!-- Botão para limpar a lista -->
-          <button id="clear-button">Limpar Lista </button>
-        </div>
-      </main>
-    
-      <script>
-        let input = document.getElementById('id-input');
-        let button = document.getElementById('id-button');
-        let clearButton = document.getElementById('clear-button');
-    
-        // Adicionar item à lista
-        button.addEventListener('click', function () { /*quando clicar no botão adiciona itens em formato de lista*/
-          if (input.value != "") {
-            let lista = document.getElementById('id-lista');
-            let item = document.createElement('li');
-            item.innerText = input.value;
-            lista.appendChild(item);
-            input.value = "";
-          }
-        });
-    
-        // Limpar lista
-        clearButton.addEventListener('click', function () {
-          let lista = document.getElementById('id-lista');
-          lista.innerHTML = ""; // Remove todos os itens da lista
-        });
-      </script>
-<footer>
-    <p>&copy; 2025 Lista de Sapatos. Todos os direitos reservados.</p>
-  </footer>
+        <!-- Lista onde os produtos serão exibidos -->
+        <ul id="listaProdutos"></ul>
+    </div>
 
-    
-    </body>
-    
-    </html>
+    <script>
+        // Função para adicionar produto à lista
+        function adicionarProduto() {
+            const input = document.getElementById("produtoInput");
+            const produto = input.value.trim();
+
+            // Verifica se o campo não está vazio
+            if (produto !== "") {
+                const li = document.createElement("li");
+                li.textContent = produto;
+                document.getElementById("listaProdutos").appendChild(li);
+                input.value = ""; // Limpa o campo após adicionar
+            }
+        }
+
+        // Função para limpar toda a lista de produtos
+        function limparLista() {
+            document.getElementById("listaProdutos").innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
