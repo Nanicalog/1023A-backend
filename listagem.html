@@ -4,16 +4,31 @@
     <meta charset="UTF-8">
     <title>Lista de Produtos</title>
     <style>
-        /* Estilo base para o corpo da página */
+        /* Fonte padrão da página */
         body {
             font-family: 'Times New Roman', Times, serif;
-            background-color: #ffffff; /* Fundo branco */
-            color: #590202; /* Cor do texto */
-            display: flex;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center; /* Centraliza verticalmente */
-            height: 100vh; /* Altura total da janela */
+            background-color: #ffffff;
+            color: #590202;
             margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho fixo simples */
+        header {
+            background-color: #fff;
+            color: #590202;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 2px solid #590202;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* Espaço para evitar que o conteúdo fique atrás do cabeçalho */
+        .spacer {
+            height: 100px;
         }
 
         /* Container principal */
@@ -24,10 +39,10 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             max-width: 400px;
-            width: 100%;
+            margin: 0 auto;
         }
 
-        /* Estilo para os botões */
+        /* Botões */
         button {
             background-color: #590202;
             color: white;
@@ -43,7 +58,7 @@
             background-color: #7a0404;
         }
 
-        /* Campo de entrada de texto */
+        /* Campo de texto */
         input[type="text"] {
             padding: 10px;
             width: 80%;
@@ -53,7 +68,7 @@
             font-size: 16px;
         }
 
-        /* Lista de produtos */
+        /* Lista */
         ul {
             list-style-type: none;
             padding: 0;
@@ -63,43 +78,57 @@
             margin: 5px 0;
             font-size: 18px;
         }
+
+        /* Alinha tudo ao centro na vertical */
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Container principal da aplicação -->
-    <div class="container">
-        <h1>Lista de Produtos</h1>
+    <!-- Cabeçalho do site -->
+    <header>
+        <h1>Maison Evangeline</h1>
+        <p>Adicione e limpe seus produtos facilmente</p>
+    </header>
 
-        <!-- Campo para digitar o nome do produto -->
-        <input type="text" id="produtoInput" placeholder="Digite o nome do produto">
+    <!-- Espaço para não cobrir o conteúdo -->
+    <div class="spacer"></div>
 
-        <!-- Botões de ação -->
-        <div>
-            <button onclick="adicionarProduto()">Adicionar</button>
-            <button onclick="limparLista()">Limpar Lista</button>
+    <!-- Conteúdo principal -->
+    <main>
+        <div class="container">
+            <h2>Lista de Produtos</h2>
+
+            <input type="text" id="produtoInput" placeholder="Digite o nome do produto">
+
+            <div>
+                <button onclick="adicionarProduto()">Adicionar</button>
+                <button onclick="limparLista()">Limpar Lista</button>
+            </div>
+
+            <ul id="listaProdutos"></ul>
         </div>
-
-        <!-- Lista onde os produtos serão exibidos -->
-        <ul id="listaProdutos"></ul>
-    </div>
+    </main>
 
     <script>
-        // Função para adicionar produto à lista
         function adicionarProduto() {
             const input = document.getElementById("produtoInput");
             const produto = input.value.trim();
 
-            // Verifica se o campo não está vazio
             if (produto !== "") {
                 const li = document.createElement("li");
                 li.textContent = produto;
                 document.getElementById("listaProdutos").appendChild(li);
-                input.value = ""; // Limpa o campo após adicionar
+                input.value = "";
             }
         }
 
-        // Função para limpar toda a lista de produtos
         function limparLista() {
             document.getElementById("listaProdutos").innerHTML = "";
         }
